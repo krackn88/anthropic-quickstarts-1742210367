@@ -9,6 +9,8 @@ from textual.containers import Container, Horizontal, Vertical
 from textual.widgets import Header, Footer, Static, Input, Button
 from textual.reactive import reactive
 from textual import events
+from textual.screen import Screen
+from textual.message import Message
 
 from professional_tui.ui.colors import THEME_COLORS
 from professional_tui.ui.menu import MenuBar
@@ -16,6 +18,7 @@ from professional_tui.ui.widgets.status_bar import StatusBar
 from professional_tui.ui.widgets.panels import MainPanel, SidePanel
 from professional_tui.ui.widgets.dialogs import AboutDialog, ConfirmDialog
 from professional_tui.ui.widgets.command_palette import CommandPalette
+from professional_tui.ui.widgets.search import SearchWidget
 
 class ProfessionalTUI(App):
     """
@@ -30,7 +33,7 @@ class ProfessionalTUI(App):
     SUB_TITLE = "A feature-rich terminal interface"
     
     # CSS file for styling the application
-    CSS_PATH = "styles.css"
+    CSS_PATH = "ui/styles.css"
     
     # Current application state
     current_view = reactive("main")
@@ -44,6 +47,7 @@ class ProfessionalTUI(App):
         Binding("ctrl+s", "save", "Save", key_display="Ctrl+S"),
         Binding("ctrl+o", "open", "Open", key_display="Ctrl+O"),
         Binding("ctrl+n", "new", "New", key_display="Ctrl+N"),
+        Binding("ctrl+f", "find", "Find", key_display="Ctrl+F"),
     ]
     
     def __init__(self, *args, **kwargs):
@@ -78,19 +82,22 @@ class ProfessionalTUI(App):
         Initialize the application state.
         """
         # Set the application title
-        self.title = self.TITLE
-        self.sub_title = self.SUB_TITLE
+        self.title = str(self.TITLE)
+        self.sub_title = str(self.SUB_TITLE)
         
         # Set the initial status
         self.query_one(StatusBar).update("Ready")
         
         # Focus the main panel
         self.query_one("#main-panel").focus()
-
+        
+        # Set initial theme
+        self.dark = self.dark_mode
+    
     def action_toggle_dark_mode(self) -> None:
         """Toggle between light and dark mode."""
         self.dark_mode = not self.dark_mode
-        self.set_theme("dark" if self.dark_mode else "light")
+        self.dark = self.dark_mode
         self.query_one(StatusBar).update("Theme: " + ("Dark" if self.dark_mode else "Light"))
     
     def action_toggle_sidebar(self) -> None:
@@ -116,6 +123,7 @@ class ProfessionalTUI(App):
         - Ctrl+N: New File
         - Ctrl+O: Open File
         - Ctrl+S: Save File
+        - Ctrl+F: Find
         - Q: Quit
 
         # Navigation
@@ -130,33 +138,36 @@ class ProfessionalTUI(App):
         - Use the command palette (F3) for quick access to all features
         - The status bar shows current file and mode information
         """
-        dialog = AboutDialog("Help", help_text)
-        self.mount(dialog)
+        self.call_later(self._show_help_dialog, help_text)
     
     def action_command_palette(self) -> None:
         """Show the command palette."""
         self.query_one(StatusBar).update("Command palette opened")
-        palette = CommandPalette()
-        self.mount(palette)
+        self.call_later(self._show_command_palette)
     
     def action_save(self) -> None:
         """Save the current file."""
-        main_panel = self.query_one("#main-panel")
+        main_panel = self.query_one("#main-panel", MainPanel)
         if main_panel.content_type == "editor" and main_panel.current_file:
             self.query_one(StatusBar).update(f"Saving {main_panel.current_file}...")
-            main_panel.handle_save()
+            self.call_later(main_panel.handle_save)
         else:
             self.query_one(StatusBar).update("No file to save")
     
     def action_open(self) -> None:
         """Open a file."""
         self.query_one(StatusBar).update("Opening file...")
-        self.query_one("#main-panel").handle_open_file()
+        self.call_later(self._open_file)
     
     def action_new(self) -> None:
         """Create a new file."""
         self.query_one(StatusBar).update("Creating new file...")
-        self.query_one("#main-panel").handle_new_file()
+        self.call_later(self._new_file)
+    
+    def action_find(self) -> None:
+        """Show the search widget."""
+        self.query_one(StatusBar).update("Search opened")
+        self.call_later(self._show_search)
     
     def action_cut(self) -> None:
         """Cut selected text."""
@@ -170,18 +181,49 @@ class ProfessionalTUI(App):
         """Paste text."""
         self.query_one(StatusBar).update("Paste")
     
-    def action_quit(self) -> None:
+    async def action_quit(self) -> None:
         """Quit the application with confirmation."""
         def on_confirm(confirmed: bool) -> None:
             if confirmed:
                 self.exit()
         
-        dialog = ConfirmDialog(
+        await self.mount(ConfirmDialog(
             "Quit Application",
             "Are you sure you want to quit? Any unsaved changes will be lost.",
             on_confirm
-        )
-        self.mount(dialog)
+        ))
+    
+    async def _show_help_dialog(self, help_text: str) -> None:
+        """Helper method to show help dialog."""
+        await self.mount(AboutDialog("Help", help_text))
+    
+    async def _show_command_palette(self) -> None:
+        """Helper method to show command palette."""
+        await self.mount(CommandPalette())
+    
+    async def _open_file(self) -> None:
+        """Helper method to open file."""
+        await self.query_one("#main-panel", MainPanel).handle_open_file()
+    
+    async def _new_file(self) -> None:
+        """Helper method to create new file."""
+        await self.query_one("#main-panel", MainPanel).handle_new_file()
+    
+    async def _show_search(self) -> None:
+        """Helper method to show search widget."""
+        await self.mount(SearchWidget())
+    
+    async def _show_quit_dialog(self) -> None:
+        """Helper method to show quit dialog."""
+        def on_confirm(confirmed: bool) -> None:
+            if confirmed:
+                self.exit()
+        
+        await self.mount(ConfirmDialog(
+            "Quit Application",
+            "Are you sure you want to quit? Any unsaved changes will be lost.",
+            on_confirm
+        ))
     
     def show_about(self) -> None:
         """Show the about dialog."""
@@ -201,5 +243,8 @@ class ProfessionalTUI(App):
         - And much more!
         """
         
-        dialog = AboutDialog("About Professional TUI", about_text)
-        self.mount(dialog)
+        self.call_later(self._show_about_dialog, about_text)
+    
+    async def _show_about_dialog(self, about_text: str) -> None:
+        """Helper method to show about dialog."""
+        await self.mount(AboutDialog("About Professional TUI", about_text))

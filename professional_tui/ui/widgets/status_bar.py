@@ -1,64 +1,106 @@
 """
-Status bar implementation for the Professional TUI.
+Status bar widget for the Professional TUI.
+Shows application status, git info, and current file.
 """
-from textual.app import ComposeResult
+
 from textual.containers import Horizontal
 from textual.widgets import Static
 from textual.reactive import reactive
+from textual.app import ComposeResult
+from professional_tui.utils.git import GitUtils, GitStatus
 
 class StatusBar(Horizontal):
-    """Status bar widget that shows application state."""
-
+    """Status bar widget showing application status and git info."""
+    
     DEFAULT_CSS = """
     StatusBar {
-        width: 100%;
-        height: 1;
         dock: bottom;
-        background: $accent;
+        height: 1;
+        background: $boost;
         color: $text;
-        border-top: solid $primary;
     }
-
-    .status-item {
+    
+    StatusBar > Static {
         padding: 0 1;
-        color: $text;
     }
-
-    #status-mode {
-        background: $secondary;
-        min-width: 16;
+    
+    StatusBar #git-status {
+        width: auto;
+        color: $success;
     }
-
-    #status-file {
-        padding-left: 1;
-        width: 60%;
+    
+    StatusBar #git-status.modified {
+        color: $warning;
     }
-
-    #status-info {
-        width: 30%;
-        text-align: right;
+    
+    StatusBar #git-status.untracked {
+        color: $error;
     }
     """
-
-    text = reactive("Ready")
-    mode = reactive("welcome")
-    file = reactive("No file")
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.git_utils = GitUtils()
+        self._status = ""
+        self._git_status = GitStatus()
     
     def compose(self) -> ComposeResult:
         """Compose the status bar."""
-        yield Static("Welcome", id="status-mode", classes="status-item")
-        yield Static("No file", id="status-file", classes="status-item")
-        yield Static(self.text, id="status-info", classes="status-item")
+        yield Static(id="status-mode")
+        yield Static(id="git-status")
+        yield Static(id="status-file")
     
-    def update(self, text: str) -> None:
+    def on_mount(self) -> None:
+        """Handle mount event."""
+        self.update_git_status()
+        self.set_interval(5.0, self.update_git_status)
+    
+    def update(self, status: str) -> None:
         """Update the status text."""
-        self.text = text
-        self.query_one("#status-info").update(text)
+        self._status = status
+        self.query_one("#status-mode", Static).update(status)
     
-    def watch_mode(self, mode: str) -> None:
-        """Watch for mode changes."""
-        self.query_one("#status-mode").update(f"Mode: {mode.capitalize()}")
+    def update_git_status(self) -> None:
+        """Update git status information."""
+        status = self.git_utils.get_status()
+        git_widget = self.query_one("#git-status", Static)
+        
+        if not status.branch:
+            git_widget.update("")
+            return
+        
+        # Build status text
+        text = f"[{status.branch}]"
+        if status.ahead:
+            text += f" ↑{status.ahead}"
+        if status.behind:
+            text += f" ↓{status.behind}"
+        
+        # Add file counts
+        counts = []
+        if status.staged:
+            counts.append(f"+{len(status.staged)}")
+        if status.modified:
+            counts.append(f"~{len(status.modified)}")
+        if status.untracked:
+            counts.append(f"?{len(status.untracked)}")
+        
+        if counts:
+            text += " " + " ".join(counts)
+        
+        # Update widget and class
+        git_widget.update(text)
+        
+        if status.untracked:
+            git_widget.set_class(True, "untracked")
+            git_widget.set_class(False, "modified")
+        elif status.modified or status.staged:
+            git_widget.set_class(True, "modified")
+            git_widget.set_class(False, "untracked")
+        else:
+            git_widget.set_class(False, "modified")
+            git_widget.set_class(False, "untracked")
     
-    def watch_file(self, file: str) -> None:
-        """Watch for file changes."""
-        self.query_one("#status-file").update(f"File: {file}")
+    def update_file(self, filename: str) -> None:
+        """Update the current file display."""
+        self.query_one("#status-file", Static).update(f"File: {filename}")

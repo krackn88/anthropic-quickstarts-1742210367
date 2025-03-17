@@ -1,567 +1,200 @@
-/* 
-Professional TUI Styles
-CSS styling for the Professional TUI application.
-*/
-
-/* Global styles */
-* {
-    box-sizing: border-box;
-    padding: 0;
-    margin: 0;
-    transition: background 0.2s, color 0.2s;
-}
-
 Screen {
-    background: $surface;
+    background: $boost;
     color: $text;
 }
 
-/* Header styles */
 Header {
-    background: #2a2a3c;
-    color: #ecf0f1;
-    height: 1;
     dock: top;
-    content-align: center middle;
-    border-bottom: solid #3c3c4c;
+    height: 1;
+    background: $boost;
+    color: $text;
 }
 
-/* Footer styles */
 Footer {
-    background: #2a2a3c;
-    color: #ecf0f1;
-    height: 1;
     dock: bottom;
-    content-align: center middle;
-    border-top: solid #3c3c4c;
-}
-
-/* Menu bar styles */
-.menu-bar {
-    background: #2a2a3c;
     height: 1;
-    dock: top;
-    layout: horizontal;
-    border-bottom: solid #3c3c4c;
-}
-
-.menu-button {
-    padding: 0 1;
-    min-width: 10;
+    background: $boost;
     color: $text;
 }
 
-.menu-button:hover {
-    background: $accent;
-}
-
-.menu-button-label {
-    width: 100%;
-    height: 100%;
-    content-align: center middle;
-}
-
-.menu-dropdown {
-    background: $surface;
-    border: wide $primary;
-    min-width: 20;
-    padding: 0;
-}
-
-.menu-dropdown.hidden {
-    display: none;
-}
-
-.menu-item {
-    padding: 0 1;
-    color: $text;
-}
-
-.menu-item:hover {
-    background: $accent;
-}
-
-/* Status bar styles */
-.status-bar {
-    background: #2a2a3c;
-    height: 1;
-    dock: bottom;
-    layout: horizontal;
-    border-top: solid #3c3c4c;
-}
-
-#status-message {
-    width: 70%;
-    padding: 0 1;
-}
-
-#status-info {
-    width: 30%;
-    layout: horizontal;
-    content-align: right middle;
-}
-
-.status-bar.info #status-message {
-    color: #3498db;
-}
-
-.status-bar.success #status-message {
-    color: #2ecc71;
-}
-
-.status-bar.warning #status-message {
-    color: #f39c12;
-}
-
-.status-bar.error #status-message {
-    color: #e74c3c;
-}
-
-/* App grid styles */
 #app-grid {
     layout: grid;
     grid-size: 2;
-    grid-columns: 1fr 4fr;
-    height: 100%;
+    grid-columns: 30 1fr;
 }
 
-/* Side panel styles */
 .side-panel {
-    width: 100%;
-    height: 100%;
-    background: $panel;
+    width: 30;
+    background: $boost;
     border-right: solid $primary;
-    padding: 1;
-    overflow-y: auto;
-}
-
-.side-panel.hidden {
-    display: none;
 }
 
 .panel-title {
-    background: $primary;
+    background: $boost;
     color: $text;
-    padding: 0 1;
+    padding: 1;
+    text-align: center;
     text-style: bold;
-    margin-bottom: 1;
 }
 
 #file-tree {
-    height: 10;
-    overflow: auto;
-    border-bottom: solid #3c3c4c;
+    background: $boost;
+    height: auto;
+    padding: 1;
 }
 
 .quick-actions {
-    margin: 1 0;
+    layout: grid;
+    grid-size: 2;
+    padding: 1;
+    height: auto;
 }
 
 .action-btn {
     width: 100%;
-    margin-bottom: 1;
-    background: #3498db;
-    color: #ecf0f1;
-    border: none;
-}
-
-.action-btn:hover {
-    background: #2980b9;
+    margin: 1;
 }
 
 .task-list {
-    margin-top: 1;
     padding: 1;
-    border: solid $primary;
-    min-height: 10;
+    height: auto;
 }
 
-.empty-message {
-    color: $text-muted;
-    text-align: center;
-    padding: 2;
-}
-
-/* Main panel styles */
 .main-panel {
-    width: 100%;
-    height: 100%;
     background: $surface;
-    padding: 1;
-    overflow: auto;
 }
 
 .content-screen {
-    width: 100%;
+    display: block;
     height: 100%;
-    padding: 1;
 }
 
 .content-screen.hidden {
     display: none;
 }
 
-/* Welcome screen styles */
 .welcome-title {
-    padding: 1;
-    text-style: bold;
-    color: $secondary;
-}
-
-.welcome-text {
-    padding: 1;
-}
-
-/* Editor screen styles */
-.editor-title {
-    background: $secondary;
-    padding: 0 1;
-    margin-bottom: 1;
-    border-bottom: solid #3c3c4c;
-}
-
-.editor-content {
-    width: 100%;
-    height: auto;
-    background: $surface;
-    color: $text;
-    border: solid $primary;
-    min-height: 20;
-    margin-top: 1;
-}
-
-/* Dashboard screen styles */
-.dashboard-row {
-    width: 100%;
-    height: auto;
-    margin-bottom: 1;
-}
-
-.dashboard-widget {
-    width: 1fr;
-    height: auto;
-    background: #2a2a3c;
-    border: solid #3c3c4c;
-    margin: 0 1;
-    padding: 1;
-}
-
-.dashboard-widget:first-of-type {
-    margin-left: 0;
-}
-
-.dashboard-widget:last-of-type {
-    margin-right: 0;
-}
-
-.widget-title {
-    text-style: bold;
-    color: $secondary;
-    margin-bottom: 1;
-}
-
-.widget-content {
-    color: $text;
-    padding: 1;
-}
-
-/* Dialog styles */
-.dialog {
-    width: 100%;
-    height: 100%;
-}
-
-.dialog-overlay {
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-}
-
-.dialog-container {
-    width: 60;
-    height: 20;
-    background: #2a2a3c;
-    border: solid #3c3c4c;
-    margin: 5;
-}
-
-.dialog-header {
-    width: 100%;
-    height: 1;
-    background: #3498db;
-    color: #ecf0f1;
-    border-bottom: solid #3c3c4c;
-}
-
-.dialog-title {
-    width: 90%;
-    height: 100%;
-    content-align: left middle;
-    padding: 0 1;
-}
-
-.close-btn {
-    width: 10%;
-    height: 100%;
-    content-align: center middle;
-    background: #3498db;
-    color: #ecf0f1;
-    border: none;
-}
-
-.close-btn:hover {
-    background: #2980b9;
-}
-
-.dialog-content {
-    width: 100%;
-    padding: 1;
-    overflow: auto;
-}
-
-.dialog-message {
-    margin-bottom: 1;
-}
-
-.dialog-footer {
-    width: 100%;
-    height: 3;
-    padding: 1;
-    content-align: right middle;
-    border-top: solid #3c3c4c;
-}
-
-.btn {
-    min-width: 10;
-    height: 1;
-    background: #2a2a3c;
-    color: #ecf0f1;
-    border: solid #3c3c4c;
-    margin-left: 1;
-    content-align: center middle;
-}
-
-.btn:hover {
-    background: #5dade2;
-}
-
-.btn-primary {
-    background: #3498db;
-    color: #ecf0f1;
-    border: none;
-}
-
-.btn-primary:hover {
-    background: #2980b9;
-}
-
-.input-label {
-    margin-bottom: 1;
-}
-
-.input-field {
-    width: 100%;
-    height: 1;
-    background: #1e1e2e;
-    color: #ecf0f1;
-    border: solid #3c3c4c;
-    margin-bottom: 1;
-}
-
-.about-text {
-    width: 100%;
-    height: 10;
-    overflow: auto;
-}
-
-/* Base application styles */
-Screen {
-    background: $surface;
-    color: $text;
-}
-
-#app-grid {
-    layout: grid;
-    grid-size: 2;
-    grid-columns: 1fr 4fr;
-    height: 100%;
-}
-
-/* Menu styles */
-MenuBar {
-    width: 100%;
-    height: auto;
-    dock: top;
-    background: $primary;
-    color: $text;
-}
-
-.menu-button {
-    padding: 0 1;
-    min-width: 10;
-    color: $text;
-}
-
-.menu-button:hover {
-    background: $accent;
-}
-
-.menu-dropdown {
-    background: $surface;
-    border: wide $primary;
-    min-width: 20;
-    padding: 0;
-}
-
-.menu-item {
-    padding: 0 1;
-    color: $text;
-}
-
-.menu-item:hover {
-    background: $accent;
-}
-
-/* Panel styles */
-.side-panel {
-    width: 100%;
-    height: 100%;
-    background: $panel;
-    border-right: solid $primary;
-    padding: 1;
-    overflow-y: auto;
-}
-
-.main-panel {
-    width: 100%;
-    height: 100%;
-    background: $surface;
-    padding: 1;
-}
-
-.panel-title {
-    background: $primary;
-    color: $text;
-    padding: 0 1;
-    text-style: bold;
-    margin-bottom: 1;
-}
-
-/* Content styles */
-.content-screen {
-    width: 100%;
-    height: 100%;
-    padding: 1;
-}
-
-.welcome-title {
-    padding: 1;
-    text-style: bold;
-    color: $secondary;
-}
-
-.welcome-text {
-    padding: 1;
-}
-
-.editor-title {
-    background: $secondary;
-    padding: 0 1;
-    margin-bottom: 1;
-}
-
-.editor-content {
-    width: 100%;
-    height: auto;
-    background: $surface;
-    color: $text;
-    border: solid $primary;
-    min-height: 20;
-}
-
-/* Quick actions */
-.quick-actions {
-    margin: 1 0;
-}
-
-.action-btn {
-    width: 100%;
-    margin-bottom: 1;
-}
-
-/* Task list */
-.task-list {
-    margin-top: 1;
-    padding: 1;
-    border: solid $primary;
-    min-height: 10;
-}
-
-.empty-message {
-    color: $muted;
     text-align: center;
-    padding: 2;
+    text-style: bold;
+    padding: 1;
 }
 
-/* Dashboard styles */
+.welcome-text {
+    padding: 1 2;
+}
+
+.editor-title {
+    background: $boost;
+    color: $text;
+    padding: 1;
+    text-align: center;
+}
+
+.editor-content {
+    height: 100%;
+    border: none;
+}
+
 .dashboard-row {
-    width: 100%;
-    height: auto;
-    margin-bottom: 1;
+    height: 1fr;
+    align: center middle;
 }
 
 .dashboard-widget {
+    height: 100%;
     width: 1fr;
-    height: auto;
-    margin: 0 1;
-    padding: 1;
+    margin: 1;
     border: solid $primary;
 }
 
 .widget-title {
+    background: $boost;
+    color: $text;
+    padding: 1;
+    text-align: center;
     text-style: bold;
-    color: $secondary;
-    margin-bottom: 1;
 }
 
 .widget-content {
+    padding: 1;
+    height: auto;
+}
+
+.command-input {
+    dock: top;
+    margin: 1;
+}
+
+.command-list {
+    background: $surface;
+    height: auto;
+    max-height: 20;
+    border: solid $primary;
+}
+
+.command-item {
+    padding: 1;
+}
+
+.command-item:hover {
+    background: $accent;
+}
+
+.command-item.selected {
+    background: $secondary;
+}
+
+#status-mode {
+    dock: left;
+    padding: 0 1;
+    background: $boost;
     color: $text;
 }
 
-/* Dialog styles */
-AboutDialog {
-    background: $surface;
-    border: wide $primary;
-    padding: 1;
-    min-width: 60;
-    max-height: 80%;
+#status-file {
+    dock: right;
+    padding: 0 1;
+    background: $boost;
+    color: $text;
 }
 
-ConfirmDialog {
+SearchWidget {
+    layout: vertical;
     background: $surface;
-    border: wide $primary;
-    padding: 1;
-    width: 40;
-}
-
-/* Command palette styles */
-CommandPalette {
-    background: $surface;
-    border: wide $primary;
-    padding: 1;
+    border: tall $primary;
     width: 60;
-    max-height: 80%;
+    height: 40;
+    padding: 1;
+    align: center middle;
 }
 
-/* Tree styles */
-Tree {
-    margin: 1 0;
+SearchWidget Input {
+    dock: top;
+    width: 100%;
+    margin-bottom: 1;
 }
 
-/* Status bar styles (complementing the existing styles) */
-StatusBar {
-    background: $primary;
-    color: $text;
+SearchWidget #search-status {
     height: 1;
-    dock: bottom;
+    width: 100%;
+    content-align: center middle;
+    text-style: italic;
+    color: $text-muted;
+}
+
+SearchWidget Tree {
+    height: 1fr;
+    border: solid $primary;
+    background: $boost;
+    scrollbar-size: 1 1;
+}
+
+SearchWidget .tree--cursor {
+    background: $accent;
+    color: $text;
+}
+
+SearchWidget .tree--highlight {
+    background: $secondary;
+    color: $text;
 }
