@@ -17,7 +17,7 @@ class MockProcess extends EventEmitter {
     return this._listeners[event as string] || [];
   }
 
-  addListener(event: string | symbol, listener: Function): this {
+  addListener(event: string | symbol, listener: (...args: any[]) => void): this {
     if (!this._listeners[event as string]) {
       this._listeners[event as string] = [];
     }

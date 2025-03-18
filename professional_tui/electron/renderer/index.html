@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cline Professional</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <div class="sidebar">
+            <div class="logo">
+                <img src="../assets/icons/icon.svg" alt="Cline" width="32" height="32">
+                <h1>Cline Pro</h1>
+            </div>
+            <div class="model-selector">
+                <select id="model-select">
+                    <option value="claude-3-opus">Claude 3 Opus</option>
+                    <option value="claude-3-sonnet">Claude 3 Sonnet</option>
+                    <option value="claude-3-haiku">Claude 3 Haiku</option>
+                    <option value="gpt-4o">GPT-4o</option>
+                    <option value="llama-3-70b">Llama 3 (70B)</option>
+                </select>
+            </div>
+            <div class="chat-list">
+                <div class="chat-list-header">
+                    <h3>Conversations</h3>
+                    <button id="new-chat-btn" class="icon-button">+</button>
+                </div>
+                <ul id="conversations">
+                    <li class="selected">New Chat</li>
+                </ul>
+            </div>
+            <div class="settings-section">
+                <button id="settings-btn" class="button">Settings</button>
+                <button id="update-btn" class="button hidden">Update Available</button>
+            </div>
+        </div>
+        <div class="main-content">
+            <div class="toolbar">
+                <div class="tools">
+                    <button id="clear-btn" class="tool-button">Clear</button>
+                    <button id="export-btn" class="tool-button">Export</button>
+                    <button id="copy-btn" class="tool-button">Copy</button>
+                </div>
+                <div class="options">
+                    <label>
+                        <input type="checkbox" id="auto-complete" checked>
+                        Auto-complete
+                    </label>
+                    <label>
+                        <input type="checkbox" id="intellisense" checked>
+                        IntelliSense
+                    </label>
+                </div>
+            </div>
+            <div class="chat-container" id="chat-container">
+                <!-- Messages will be inserted here -->
+            </div>
+            <div class="input-container">
+                <textarea id="user-input" placeholder="Type your message here..."></textarea>
+                <div class="input-buttons">
+                    <button id="send-btn" class="primary-button">Send</button>
+                    <button id="attach-btn" class="secondary-button">Attach File</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Settings Modal -->
+        <div id="settings-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Settings</h2>
+                    <button class="close-btn">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="settings-section">
+                        <h3>API Keys</h3>
+                        <div class="form-group">
+                            <label for="anthropic-key">Anthropic API Key</label>
+                            <input type="password" id="anthropic-key" placeholder="Enter your Anthropic API key">
+                        </div>
+                        <div class="form-group">
+                            <label for="openai-key">OpenAI API Key</label>
+                            <input type="password" id="openai-key" placeholder="Enter your OpenAI API key">
+                        </div>
+                    </div>
+                    <div class="settings-section">
+                        <h3>Model Parameters</h3>
+                        <div class="form-group">
+                            <label for="temperature">Temperature</label>
+                            <input type="range" id="temperature" min="0" max="1" step="0.1" value="0.7">
+                            <span id="temperature-value">0.7</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="max-tokens">Max Tokens</label>
+                            <input type="number" id="max-tokens" min="100" max="4000" value="1000">
+                        </div>
+                    </div>
+                    <div class="settings-section">
+                        <h3>Interface</h3>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="dark-mode" checked>
+                                Dark Mode
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="auto-save" checked>
+                                Auto-save conversations
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="save-settings" class="primary-button">Save</button>
+                    <button class="secondary-button close-btn">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="renderer.js"></script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 {
   "name": "cline-electron",
-  "version": "1.0.0",
+  "version": "1.1.1",
   "description": "Professional GUI client for Cline with integrated services",
   "main": "dist/main.js",
   "scripts": {
@@ -21,7 +21,7 @@
     "electron-store": "^8.1.0",
     "electron-updater": "^6.3.9",
     "keytar": "^7.9.0",
-    "monaco-editor": "^0.45.0",
+    "monaco-editor": "0.44.0",
     "node-fetch": "^3.3.0",
     "octokit": "^3.1.0",
     "react": "^18.2.0",
@@ -54,16 +54,37 @@
     },
     "files": [
       "dist/**/*",
-      "package.json"
+      "package.json",
+      {
+        "from": "renderer",
+        "to": "renderer"
+      }
     ],
-    "mac": {
-      "category": "public.app-category.developer-tools"
-    },
-    "win": {
-      "target": "nsis"
-    },
+    "extraResources": [
+      {
+        "from": "renderer",
+        "to": "renderer"
+      },
+      {
+        "from": "assets",
+        "to": "assets"
+      }
+    ],
     "linux": {
-      "target": "AppImage"
+      "target": "AppImage",
+      "icon": "assets/icons/icon.png"
     }
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "roots": [
+      "<rootDir>/src",
+      "<rootDir>/tests"
+    ],
+    "testMatch": [
+      "**/__tests__/**/*.ts",
+      "**/?(*.)+(spec|test).ts"
+    ]
   }
 }

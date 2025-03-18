@@ -1,42 +1,19 @@
-/** @type {import('ts-jest').JestConfigWithTsJest} */
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
-  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
+  roots: ['<rootDir>/src'],
   transform: {
-    '^.+\\.(ts|tsx)$': [
-      'ts-jest',
-      {
-        tsconfig: 'tsconfig.test.json'
-      }
-    ]
+    '^.+\\.tsx?$': 'ts-jest',
   },
-  testMatch: [
-    '**/__tests__/**/*.test.(ts|tsx|js)'
-  ],
-  setupFilesAfterEnv: ['<rootDir>/src/__tests__/setup.ts'],
-  setupFiles: ['<rootDir>/src/__tests__/setMaxListeners.ts'],
-  moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/src/$1'
-  },
-  testEnvironmentOptions: {
-    url: 'http://localhost/'
-  },
+  testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.tsx?$',
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
+  setupFiles: ['<rootDir>/src/__tests__/setup.ts'],
   collectCoverage: true,
   coverageDirectory: 'coverage',
   coverageReporters: ['text', 'lcov'],
-  coveragePathIgnorePatterns: [
-    '/node_modules/',
-    '/dist/',
-    '/__tests__/',
-  ],
-  // Increase timeout for slower tests
-  testTimeout: 10000,
-  // Handle test environment better
-  testEnvironment: 'node',
   globals: {
     'ts-jest': {
-      isolatedModules: true
+      tsconfig: '<rootDir>/tsconfig.test.json'
     }
   }
 };
